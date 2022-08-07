@@ -257,5 +257,76 @@ This stage involves three stages
 Export the output files with the layout and characterization information obtained in the last step.
 
 ## Day 3
+In this day we are going to study the characterization tools availables.
+
+### SPICE
+
+In SPICE we can describe a circuit an simulate it with their particular netlist syntax. In characterization we need to make some definitions:
+
+$V_m$ is the point where $V_{in}$ = $V_{out}$ in a inverter.
+
+Rise Delay: Time between the input and output changes when output goes from low to high. It is measured at $V_{DD}/2$ with a transient analysis.
+
+Fall Delay: Time between the input and output changes when output goes from high to low. It is measured at $V_{DD}/2$ with a transient analysis.
+
+### Review of the 16 layers CMOS fabrication process
+
+Presentation gave us a review of the 16-mask CMOS fabrication process unfairly summarized in the following list:
+ - Selecting a substrate.
+ - Create active regions for transistors.
+ - N-well and P-well.
+ - Formation of the gate.
+ - Lightly doped drain (LDD) formation.
+ - Source and drain formation. 
+ - Steps to form contacts and inteconnects(local)
+ - Higher level metal formation.
+
+
+
+### Lab :-)
+
+First we clone the git that nickson prepared for us.
+
+`git clone https://github.com/nickson-jose/vsdstdcelldesign.git`
+
+![](Images/Captura-2022-08-07-08-54-23.png)
+
+Now we must copy, from the PDK, the `sky130A.tech` file to the cloned folder.
+
+`cp ../../pdks/sky130A/libs.tech/magic/sky130A.tech  .`
+
+Then we can visualize the inverter layout with the command
+
+`magic -T sky130A.tech sky130_inv.mag &`
+
+![](Images/Captura-2022-08-07-09-09-11.png)
+
+We can select different regions with the S key and we can ask in the tcl command line what elements are selected.
+
+![](Images/Captura-2022-08-07-17-29-52.png)
+![](Images/Captura-2022-08-07-17-32-06.png)
+![](Images/Captura-2022-08-07-17-36-33.png)
+
+Once we checked that DRC is not reporting any violation, we can proceed to extract our design in the tcl command line
+
+![](Images/Captura-2022-08-07-17-46-46.png)
+
+The generated file can be viewed in the `vsdstdcelldesign` folder.
+
+![](Images/Captura-2022-08-07-17-49-03.png)
+
+now we can generate the SPICE model with the commands
+
+`ext2spice cthresh 0 rthresh 0`
+
+`ext2spice`
+
+![](Images/Captura-2022-08-07-17-52-30.png)
+![](Images/Captura-2022-08-07-17-53-34.png)
+
+Finally we can check the SPICE model generated
+
+![](Images/Captura-2022-08-07-17-56-26.png)
+
 ## Day 4
 ## Day 5
