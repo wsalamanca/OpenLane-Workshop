@@ -116,7 +116,7 @@ We can check the dfxtp ratio
 ![](Images/Captura-2022-08-06-23-04-23.png)
 
 $$\text{Flop Ratio}=\frac{1634}{14876}=10.98\%$$
-$$\text{Buffer Ratio}=\frac{1656+8}{14876}=11.18\%$$
+$$\text{Buffer Ratio}=\frac{1656+8}{14876}=11.18\%$$ 
 
 ## Day 2
 ## Day 3
