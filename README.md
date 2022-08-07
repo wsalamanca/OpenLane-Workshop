@@ -204,9 +204,57 @@ In this interface, magic is opened and this are some useful keyboard shortcuts:
 
  ### Placement and Routing
 
+Here are described the main steps on this process
 
+#### Bind netlist
 
+For placement and routing we must understand libraries. The libraries contains basic digital components with the dimensions required to be placed in our core. A library contains different models of each component that gives the geometry and timing information. A library also contains different shape of the same component; usually it is the same component but faster/bigger or slow/small. The
 
+#### Placement
+
+This means we must place the components binded from our last stage and put them in the core. The main goal of the placement is to minimize and balance the lenght of the tracks between cells. We must take into account the location of the I/O pads.
+
+#### Optimal Placement
+
+Once all the cells are located we can make adjustments to optimize the location. The main goal is to keep signal integrity. The main strategy is to add buffers as repeters of the critical signals. The critical signals are idetified because the length of the wire. Long distance implies high resistance and high capacitance. Buffers make the job but they are occuping area without adding functional features.
+
+#### Lab section!
+
+To run the placement, we just run in the tcl command line the command `run_placement`. The main objetive is reduce the wire length. It is an iterative process because it is minimizing the wire length
+
+![](Images/Captura-2022-08-07-07-04-05.png)
+![](Images/Captura-2022-08-07-07-05-45.png)
+
+After we run the placement, we can check the results in the magic interface. We must go to the folder `placement` and execute the command
+
+`magic -T /home/williamsalamanca/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.placement.def &`
+
+![](Images/Captura-2022-08-07-07-11-51.png)
+
+We can see that all the cells that were located at the lower corner of the core now are located along the available area. We can see that cells are not fully aligned.
+
+![](Images/Captura-2022-08-07-07-14-33.png)
+
+This is because we will start a detailed placement in the next stage. Usually in this stage we must make some task related with power planning but in openlane those task are moved after CTK.
+
+### Cell Design Flow
+
+Now we are giving a break to see an overview of cell design flow. The standard cells we are using must be designed at low level transistor. We can find in a library the same cell but with different drive strength or different $V_t$. That leads to different timing specifications of this cells. Cell Design Flow is divided in three main stages: Inputs, Design steps and Outputs.
+
+#### Inputs
+
+The inputs of any cell design are basically the PDK's DRC rules, the electrical models and the user requierements.
+
+#### Design Steps
+
+This stage involves three stages
+ - Circuit Design: In this stage we determine the schematic of the circuit and the parameters for each transistor.
+ - Laout Design: After the circuit is defined, we can use the network graphs nmos and pmos to make the layout. Euler's path is used to define the poly channels order to optimize the layout.
+ - Characterization: It has its own process and it is based on SPICE models and simulation. The timing characterization
+
+#### Outputs
+
+Export the output files with the layout and characterization information obtained in the last step.
 
 ## Day 3
 ## Day 4
