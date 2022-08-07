@@ -71,7 +71,7 @@ Each step of the process requires many opensource tools:
   - Yosis (again): makes LEC looking for errors in the implementation steps.
   - Finally, the last errors checking is made by tools like OpenSTA (part of OpenROAD) and Magic.
 
-### To the lab...
+### To the lab... Preparing and Synthetizing
 To work with the OpenLane tools we receive access to an account and access via remote desktop. Inside the user folder, we find a work directory with all the required tools. The following file shows the directory tree of the working directory
 
 add file... someday
@@ -122,6 +122,92 @@ The calculation for the Buffer ratio is:
 $$\text{Buffer Ratio}=\frac{1656+8}{14876}=11.18\text{\%}$$ 
 
 ## Day 2
+
+In this day we will cover the rest of the processes involved in the floorplanning and place and route. 
+
+### Floorplanning
+
+Floorplanning is the stage when we must distribute the cells on the available area, so we must analyze some topics.
+
+#### Die and Core definitions
+Core is the area where our cells can be placed and Die is the Silicon chip area that containts the core and the I/O pads. In our design, our cells can not utilize the 100% of the die, so we can define some metrics:
+
+$$\text{Utilization Factor}= \frac{\text{Area occuped by netlist}}{\text{Total area of the core}}$$
+$$\text{Aspect Ratio}= \frac{\text{Core Height}}{\text{Core Width}}$$
+
+#### Preplaced cells
+
+Any design is usually divided in many repetible blocks. And many of these blocks are usually configured in typical interconection patterns. This cluster of cells are usually preplaced manually before any other parts of the circuit and they are called preplaced cells.
+
+#### Decoupling Capacitors
+
+Even on a breadboard, in the early student age, we have been placing capacitors near to the digital circuits, specially on those circuits that are far from the power source. This decoupling capacitors try to minimize the voltage drop due to the switching on the digital systems which requires a lot of current from the source. This capacitors act like a local temporal power supply for this devices. This drop can be dangerous when the drop can reach the noise margins limits.
+
+In our system, the preplaced cells must be placed with decoupling capacitors on free areas around these cells.
+
+#### Power Planning
+
+The decoupling capacitors can minimize the voltage drop in the powerlines of the system, but, another phenomena must be handled when many lines (like a signal bus) make the same transition (let's say one to zero). This produce a Ground Bounce because the inherent capacitance of each data line to ground. The opposite case may produce a voltage drop.
+
+The main issue is because power source is comming from one single point, so we could place many power sources along the core but this is not possible. The solution is to make a grid of distribution of power lines. This reduces significantly the resistance in the power lines
+
+#### Pin Placement
+
+The pins location is over the die but out of the core. Usually, input pins and output pins are located in opposite sides of the die (left/right top/bottom). This location must keep pins and their receiving blocks as near as they can and handle the different clock domains in the core. Clock pins are bigger than other pins due to the importance of this signal, because bigger pads reduce the resistance.
+
+#### Lab time: Floorplanning
+
+before talk about place and route we must make the floorplanning in our design. To do this we can just run the command `run_floorplan`, but lets see some of the configuration files that determine the floorplan action.
+
+The file located at `openlane/configuration/README.md` list and explain each of the parameters used in each of the stages of the openlane process, starting with synthesis. This file just give an explanation of each of the parameters. Making a comparison of the actual file and the version that the video has we can se that many parameters has been added on each stage.
+
+![](Images/Captura-2022-08-07-04-57-30.png)
+![](Images/Captura-2022-08-07-04-58-37.png)
+![](Images/Captura-2022-08-07-04-59-31.png)
+![](Images/Captura-2022-08-07-05-01-00.png)
+
+The files that set the default values for this parameters are in the same folder. One for each step in the process. To change an specific parameter for a single design, we must go to the design folder `openlane/designs/picorv32a` to check the two `config.tcl` and `sky130A_sky130_fd_sc_hd_config.tcl` files. This two files can override any of the default parameters in the configuration folder.
+
+After running the `run_floorplan` in the tcl console, we can check the generated files. The runs folder in the design project contains the generated files:
+![](Images/Captura-2022-08-07-05-53-51.png)
+
+The log file is in `logs/floorplan/ioPlacer.log` in the video but in my own floorplan directory, the log file is splited in different parts.
+
+![](Images/Captura-2022-08-07-05-56-39.png)
+
+Anyway, the main file generated after this process is located in the `results/floorplan` folder. It is a `.dat` folder called `picorv32a.floorplan.def`
+
+![](Images/Captura-2022-08-07-06-02-54.png)
+
+In this file we can see the die area. For our case is $660.685\text{ x }671.405 \mu\text{m}$ 
+
+Now we are ready to see a graphics of the placement results. we can execute:
+
+`magic -T /home/williamsalamanca/Desktop/work/tools/openlane_working_dir/pdks/sky130A/libs.tech/magic/sky130A.tech lef read ../../tmp/merged.lef def read picorv32a.floorplan.def &`
+
+![](Images/Captura-2022-08-07-06-10-12.png)
+
+![](Images/Captura-2022-08-07-06-11-55.png)
+
+In this interface, magic is opened and this are some useful keyboard shortcuts:
+
+ - S key - is for selection.
+ - V key - fix view to the selected object.
+ - Z key - is for zoom a previously area selected with left and right click.
+
+ ![](Images/Captura-2022-08-07-06-18-11.png)
+ ![](Images/Captura-2022-08-07-06-19-04.png)
+
+ In the tcl console we can also introduce commands like `what` that gives the information of the selected object
+
+ ![](Images/Captura-2022-08-07-06-21-13.png)
+
+ ### Placement and Routing
+
+
+
+
+
 ## Day 3
 ## Day 4
 ## Day 5
