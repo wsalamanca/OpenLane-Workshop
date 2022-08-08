@@ -328,5 +328,41 @@ Finally we can check the SPICE model generated
 
 ![](Images/Captura-2022-08-07-17-56-26.png)
 
+### SPICE
+Create the SPICE simulation file
+![](Images/Captura-2022-08-07-20-43-39.png)
+
+`ngspice sky130_inv.spice`
+
+![](Images/Captura-2022-08-07-20-40-25.png)
+
+`plot y vs time a`
+
+![](Images/Captura-2022-08-07-20-42-11.png)
+
+make some changes at the C3 capacitor
+
+![](Images/Captura-2022-08-07-20-45-50.png)
+
+`ngspice sky130_inv.spice`
+
+![](Images/Captura-2022-08-07-20-47-18.png)
+
+`plot y vs time a`
+
+![](Images/Captura-2022-08-07-20-47-56.png)
+
+determine the rising time between 20% to 80%. You can make zoom using the right click and you can pick a point in the graph just clicking over it.
+
+![](Images/Captura-2022-08-07-20-55-05.png)
+
+$$\text{rise time}= 62.86 \text{ps}$$
+
+Cell array delay is determined at 50% of the power supply
+
+![](Images/Captura-2022-08-07-21-04-53.png)
+
+$$\text{cell array delay}=  59.94\text{ps}$$
+
 ## Day 4
 ## Day 5
